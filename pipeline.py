@@ -26,12 +26,12 @@ from kfp.v2.dsl import component, OutputPath
 def undeploy_all_models_from_endpoint(
 		project_id: str,
 		location: str,
-		endpoint_resource_name: str,
+		endpoint_resource: Input[Artifact],
 ):
 		from google.cloud import aiplatform
 		aiplatform.init(project=project_id, location=location)
 		
-		endpoint = aiplatform.Endpoint(endpoint_resource_name)
+		endpoint = aiplatform.Endpoint(endpoint_resource.uri.split("/")[-1])
 		deployed_models = endpoint.list_models()
 		
 		for deployed_model in deployed_models:
@@ -135,7 +135,7 @@ def marathontime_pipeline():
 		undeploy_op = undeploy_all_models_from_endpoint(
 				project_id=project_id,
 				location=location,
-				endpoint_resource_name=create_endpoint_op.outputs["endpoint"],
+				endpoint_resource=create_endpoint_op.outputs["endpoint"],
 		)
 		undeploy_op.after(create_endpoint_op)
 		# LOG MODEL UPLOAD OUTPUT MODEL

@@ -9,8 +9,6 @@ from google_cloud_pipeline_components.v1.endpoint import EndpointCreateOp
 from google_cloud_pipeline_components.v1.model import ModelGetOp
 
 
-
-
 project_id = "mlops2024-441121"
 location = "us-central1"
 pipeline_root="gs://mlops2024-pipeline/pipe-runs"
@@ -18,7 +16,7 @@ pipeline_root="gs://mlops2024-pipeline/pipe-runs"
 from kfp.v2.dsl import component, Input, Output, Artifact
 from kfp.v2.dsl import component, OutputPath
 
-
+# Component to undeploy all models from an endpoint
 @component(
 		packages_to_install=['google-cloud-aiplatform'],
 		base_image='python:3.8',
@@ -42,12 +40,13 @@ def undeploy_all_models_from_endpoint(
 				)
 
 
+# Component to log the model resource output
 @component
 def log_model_upload_output(model_resource: Input[Artifact]):
 		print("Model resource URI:", model_resource.uri)
 		print("Model resource NAME:", model_resource.name)
-		# You can add more logs if needed
 
+# Custom component to upload a model to Vertex AI
 @component(
 		packages_to_install=['google-cloud-aiplatform'],
 		base_image='python:3.8',
@@ -79,7 +78,7 @@ def upload_model_custom(
 		
 		
 
-
+# Define the pipeline
 @kfp.dsl.pipeline(name="marathontime-training-deployment-pipeline", pipeline_root=pipeline_root)
 def marathontime_pipeline():
 		

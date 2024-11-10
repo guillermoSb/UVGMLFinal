@@ -8,3 +8,4 @@
 ```curl -X POST http://localhost:<PORT>/predict -H "Content-Type: application/json" -d '{"wall_21": 2, "km_per_week": 21}'```
 4. For effort: docker pull guillermosb/effort-predict:latest and run the docker image
 ```docker run -p <PORT>:8080 guillermosb/effort-predict```
+
